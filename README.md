@@ -1,5 +1,5 @@
 # Measuring Political Divisiveness by Machine Learning of Congressional Voting Records
-Research Project by Dr. Douglas Fisher and Aditya Pillai
+*Research Project by Dr. Douglas Fisher and Aditya Pillai*
 
 **Abstract:** Common wisdom suggests that we live in highly polarized times, and that reducing the polarity would be beneficial. This paper expands on the first of these beliefs by measuring the degree of political polarization over the years. Our proxy for polarization is the ease with which political party of members of Congress can be predicted from machine learning of their voting records from 1789 through 2017. We measure ‘ease’ of prediction in several different ways.
 
