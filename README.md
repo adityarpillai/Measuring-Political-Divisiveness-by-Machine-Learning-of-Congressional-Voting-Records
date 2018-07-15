@@ -10,17 +10,37 @@ The measures above characterize divisiveness by ‘ease’ of distinguishing pol
 To evaluate the various measures as reasonable proxies of divisiveness, we compare the year by year ratings by each measure, with the divisiveness ratings of political historians, who we surveyed. We judge our measures by their correlations with the yearly averages of historians, as well as the “best fitting” historian for each method.
 
 - [Measuring Political Divisiveness by Machine Learning of Congressional Voting Records](#measuring-political-divisiveness-by-machine-learning-of-congressional-voting-records)
-    - [Data](#data)
-    - [File Structure](#file-structure)
+    - [Repository Structure](#repository-structure)
         - [Data](#data)
+        - [Python](#python)
+            - [Requirements](#requirements)
+    - [References](#references)
+        - [Source Data](#source-data)
+        - [Open Source Libraries](#open-source-libraries)
 
-## Data
 
-Data is retrieved from UCLA's [VoteView](https://voteview.com/data).
-
-## File Structure
+## Repository Structure
 
 ### Data
 
-Within this repository, the raw data is stored in the `data` folder. Within the `data` folder, the two houses of Congress are separated by folder -- `house` and `senate`. In each of these folders, there is the leading character for House (H) and Senate (S), followed by a three digit number corresponding to the session of Congress (e.g. 001 is the 1st Session of Congress which lasted from 1789-1791 and 115 is the 115th Session fo Congress which is the most recent session lasting from 2017 until 2019).
+Within this repository, the raw data is stored in the `data` folder. Within the `data` folder, the two houses of Congress are separated by folder -- `house` and `senate`. 
+In each of these folders, there is the leading character for House (H) and Senate (S), followed by a three digit number corresponding to the session of Congress (e.g. 001 is the 1st Session of Congress which lasted from 1789-1791 and 115 is the 115th Session fo Congress which is the most recent session lasting from 2017 until 2019).
 
+### Python
+
+Python [3.6.5](https://www.python.org/downloads/release/python-365/) (the latest stable release of Python at the time of programming compatible with scikit-learn) is used for this project. 
+
+#### Requirements
+
+Package requirements for Python are located in `requirements.txt` and can be installed with `pip install -r requirements.txt`.
+
+## References
+
+
+### Source Data
+
+Data is retrieved from UCLA's [VoteView](https://voteview.com/data).
+
+### Open Source Libraries
+
+Python's [scikit learn](http://scikit-learn.org/stable/modules/tree.html) is used for decision trees.
