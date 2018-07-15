@@ -39,8 +39,8 @@ def main():
     clf = clf.fit(features[:x], parties[:x])
     averages.append(clf.score(features, parties))
 
-  # plt.plot(averages)
-  # plt.show()
+  plt.plot(averages)
+  plt.show()
   print(averages)
    
 if __name__ == "__main__":
