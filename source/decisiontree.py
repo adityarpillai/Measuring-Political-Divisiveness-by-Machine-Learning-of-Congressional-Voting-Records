@@ -18,14 +18,9 @@ from pprint import pprint
 from scripts.features import get_features
 from scripts.shuffle import unison_shuffle
 
-def main():
-  # print(len(sys.argv))
-  if len(sys.argv) != 3:
-      print("\nERROR: No filename specified, or too many command line variables.")
-      print("RUN AS: decisiontree.py [votes filename] [members filename]\n")
-      exit(0)
+def main(votes, members):
 
-  (parties, features) = get_features(sys.argv[1], sys.argv[2])
+  (parties, features) = get_features(votes, members)
 
   parties = np.array(parties)
   features = np.array(features)
@@ -34,14 +29,17 @@ def main():
   
   averages = []
 
-  for x in range(1, 30):
+  for x in range(1, 31):
     clf = tree.DecisionTreeClassifier()
     clf = clf.fit(features[:x], parties[:x])
     averages.append(clf.score(features, parties))
 
-  plt.plot(averages)
-  plt.show()
-  print(averages)
+  return averages 
    
 if __name__ == "__main__":
-  main()
+  if len(sys.argv) != 3:
+      print("\nERROR: No filename specified, or too many command line variables.")
+      print("RUN AS: decisiontree.py [votes filename] [members filename]\n")
+      exit(0)
+  print(main(sys.argv[1], sys.argv[2]))
+  
