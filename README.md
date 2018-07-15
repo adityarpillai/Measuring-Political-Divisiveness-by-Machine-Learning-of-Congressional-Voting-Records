@@ -9,10 +9,14 @@ The measures above characterize divisiveness by ‘ease’ of distinguishing pol
 
 To evaluate the various measures as reasonable proxies of divisiveness, we compare the year by year ratings by each measure, with the divisiveness ratings of political historians, who we surveyed. We judge our measures by their correlations with the yearly averages of historians, as well as the “best fitting” historian for each method.
 
+- [Measuring Political Divisiveness by Machine Learning of Congressional Voting Records](#measuring-political-divisiveness-by-machine-learning-of-congressional-voting-records)
+    - [Data](#data)
+    - [File Structure](#file-structure)
+        - [Data](#data)
 
 ## Data
 
-Data is retrieved from UCLA's (VoteView)[https://voteview.com/data].
+Data is retrieved from UCLA's [VoteView](https://voteview.com/data).
 
 ## File Structure
 
