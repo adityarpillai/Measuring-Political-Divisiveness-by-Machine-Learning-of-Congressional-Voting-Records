@@ -7,49 +7,41 @@ from collections import defaultdict
 # Sklearn's decision tree implementation
 from sklearn import tree
 
+import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+
 # Diagnosis of issues
 from pprint import pprint
 
+from scripts.features import get_features
+from scripts.shuffle import unison_shuffle
+
 def main():
   # print(len(sys.argv))
-  if len(sys.argv) != 2:
+  if len(sys.argv) != 3:
       print("\nERROR: No filename specified, or too many command line variables.")
-      print("RUN AS: decisiontree.py [filename]\n")
+      print("RUN AS: decisiontree.py [votes filename] [members filename]\n")
       exit(0)
 
-  # Reads CSV file passed through sys args
-  with open(sys.argv[1], 'r') as f:
-    reader = csv.reader(f)
-    data = list(reader)
+  (parties, features) = get_features(sys.argv[1], sys.argv[2])
 
-  total_rollcalls = int(data[len(data) - 1][2])
-  # print([0] * total_rollcalls)
-  congresspeoples = defaultdict(lambda: [0] * total_rollcalls)
+  parties = np.array(parties)
+  features = np.array(features)
 
-  # Create a dictionary where the key is the icpsr of the congressperson and the pair is the list of their votes
-  for vote in data[1:]:
-    # Unused
-    session = vote[0]
-    chamber = vote[1]
-    probability = vote[5]
-
-    # Used
-    rollnumber = int(vote[2]) # An identifier for what was voted on
-    icpsr = vote[3] # An identiier for the person that was voting
-    cast_code = int(vote[4]) # How they voted
-    (congresspeoples[icpsr])[rollnumber - 1] = cast_code
-
-  # Testing to show if length of each congressperson is the same
-  # for key in congresspeoples:
-  #   print(key, end=" ")
-  #   print(len(congresspeoples[key]))
-
-  # pprint(congresspeoples)
+  parties, features = unison_shuffle(parties, features)
   
-  
-  # for person in congresspeoples:
+  averages = []
 
+  for x in range(1, 30):
+    clf = tree.DecisionTreeClassifier()
+    clf = clf.fit(features[:x], parties[:x])
+    averages.append(clf.score(features, parties))
 
+  # plt.plot(averages)
+  # plt.show()
+  print(averages)
    
 if __name__ == "__main__":
   main()

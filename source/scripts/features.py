@@ -7,13 +7,11 @@ from pprint import pprint
 # sys.argv[1] = votes csv file
 # sys.argv[2] = members csv file
 
-def get_features():
-    if(len(sys.argv) != 3):
-        print("\npython features.py [votes csv] [members csv]\n")
-        exit(-1)
+def get_features(votes_file, party_file):
+    
 
     # Open the votes file
-    with open(sys.argv[1], 'r') as f:
+    with open(votes_file, 'r') as f:
         reader = csv.reader(f)
         data = list(reader)
 
@@ -35,7 +33,7 @@ def get_features():
         (congresspeoples[icpsr])[rollnumber - 1] = cast_code
 
     # Open the party file and save it to the party_information list
-    with open(sys.argv[2], 'r') as f:
+    with open(party_file, 'r') as f:
         reader = csv.reader(f)
         party_information = list(reader)
 
@@ -55,4 +53,8 @@ def get_features():
     return(features, votes)
 
 if __name__ == "__main__":
-    get_features()
+    if(len(sys.argv) != 3):
+        print("\npython features.py [votes csv] [members csv]\n")
+        exit(-1)
+    
+    get_features(sys.argv[1], sys.argv[2])
