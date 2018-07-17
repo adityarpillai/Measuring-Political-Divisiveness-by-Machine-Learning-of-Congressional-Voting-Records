@@ -17,7 +17,7 @@ from pprint import pprint
 
 from scripts.features import get_features
 
-def main(votes, members):
+def decisiontree(votes, members):
   # Get a DataFrame of features
   df = get_features(votes, members)
   df = df.fillna(0)
@@ -58,5 +58,5 @@ if __name__ == "__main__":
       print("\nERROR: No filename specified, or too many command line variables.")
       print("RUN AS: decisiontree.py [votes filename] [members filename]\n")
       exit(0)
-  print(main(sys.argv[1], sys.argv[2]))
+  print(decisiontree(sys.argv[1], sys.argv[2]))
   
