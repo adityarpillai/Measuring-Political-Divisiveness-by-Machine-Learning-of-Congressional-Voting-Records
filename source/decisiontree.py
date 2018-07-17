@@ -1,20 +1,10 @@
 # Necessary to read file from running this as a script
-import sys, csv
-
-# Creates a dictionary of empty lists for each of the members of congress
-from collections import defaultdict
+import sys
 
 # Sklearn's decision tree implementation
 from sklearn import tree
 
-import numpy as np
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
-
-# Diagnosis of issues
-from pprint import pprint
-
+# To get a features DataFrame from the CSV files
 from scripts.features import get_features
 
 def decisiontree(votes, members):
