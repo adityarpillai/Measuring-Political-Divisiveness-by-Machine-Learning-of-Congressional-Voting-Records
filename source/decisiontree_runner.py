@@ -4,8 +4,32 @@ import sys
 import pandas as pd
 import numpy as np
 
-def main_house(excel, sessions, trials):
+BASE_FILE_LOCATION = "/Users/adityapillai/Projects/Measuring-Political-Divisiveness-by-Machine-Learning-of-Congressional-Voting-Records/"
+
+def main_house(sessions, trials):
+    """ Returns a DataFrame of test results in the House.
     
+    sessions: number of sessions to test from 001 to sessions (inclusive).
+    trials: number of trials of classification per session (randomized order of
+                training data)
+
+    DataFrame takes the format of 
+
+    session	trial	person_001	    person_002      ...
+    001	    1	    0.567164179	    0.567164179     ...
+	        2	    0.567164179	    0.567164179     ...
+	        3	    0.432835821	    0.52238806      ...
+	        4	    0.432835821	    0.432835821     ...
+	        5	    0.567164179	    0.567164179     ...
+	        mean	0.513432836	    0.531343284     ...
+	        std_dev	0.065807187	    0.05221748      ...
+    002     1           ...             ...         ...
+    ...     ...         ...             ...         ...
+
+    where person_001, person_002, person_n is the training size used and the
+    variable measured is the successrate of the DecisionTree model.
+
+    """
     # Create a DataFrame that is first sorted by session, then by trial
     df = pd.DataFrame(columns=["session", "trial"])
     df = df.set_index(["session", "trial"])
@@ -17,9 +41,9 @@ def main_house(excel, sessions, trials):
         num = "{:03}".format(x)
 
         # Create link for votes file
-        votes_f = "/Users/adityapillai/Projects/Measuring-Political-Divisiveness-by-Machine-Learning-of-Congressional-Voting-Records/data/house/H" + num + "_votes.csv"
+        votes_f = BASE_FILE_LOCATION + "data/house/H" + num + "_votes.csv"
         # Create link for members file
-        members_f = "/Users/adityapillai/Projects/Measuring-Political-Divisiveness-by-Machine-Learning-of-Congressional-Voting-Records/data/house/H" + num + "_members.csv"
+        members_f = BASE_FILE_LOCATION + "data/house/H" + num + "_members.csv"
 
         membervotes_df = get_features(votes_f, members_f)
         membervotes_df.fillna(0, inplace=True)
@@ -56,12 +80,32 @@ def main_house(excel, sessions, trials):
         df.loc[(num, "mean"), :] = average
         df.loc[(num, "std_dev"), :] = standard_dev
 
-    # Create an Excel Writer to write to an Excel spreadsheet
-    writer = pd.ExcelWriter(excel)
-    df.to_excel(writer,'House')
-    writer.save()
+    return df 
 
-def main_senate(excel, sessions, trials):
+def main_senate(sessions, trials):
+     """ Returns a DataFrame of test results in the House.
+    
+    sessions: number of sessions to test from 001 to sessions (inclusive).
+    trials: number of trials of classification per session (randomized order of
+                training data)
+
+    DataFrame takes the format of 
+
+    session	trial	person_001	    person_002      ...
+    001	    1	    0.567164179	    0.567164179     ...
+	        2	    0.567164179	    0.567164179     ...
+	        3	    0.432835821	    0.52238806      ...
+	        4	    0.432835821	    0.432835821     ...
+	        5	    0.567164179	    0.567164179     ...
+	        mean	0.513432836	    0.531343284     ...
+	        std_dev	0.065807187	    0.05221748      ...
+    002     1           ...             ...         ...
+    ...     ...         ...             ...         ...
+
+    where person_001, person_002, person_n is the training size used and the
+    variable measured is the successrate of the DecisionTree model.
+
+    """
     
     # Create a DataFrame that is first sorted by session, then by trial
     df = pd.DataFrame(columns=["session", "trial"])
@@ -75,9 +119,9 @@ def main_senate(excel, sessions, trials):
         num = "{:03}".format(x)
 
         # Create link for votes file
-        votes_f = "/Users/adityapillai/Projects/Measuring-Political-Divisiveness-by-Machine-Learning-of-Congressional-Voting-Records/data/senate/S" + num + "_votes.csv"
+        votes_f = BASE_FILE_LOCATION + "data/senate/S" + num + "_votes.csv"
         # Create link for members file
-        members_f = "/Users/adityapillai/Projects/Measuring-Political-Divisiveness-by-Machine-Learning-of-Congressional-Voting-Records/data/senate/S" + num + "_members.csv"
+        members_f = BASE_FILE_LOCATION + "data/senate/S" + num + "_members.csv"
 
         membervotes_df = get_features(votes_f, members_f)
         membervotes_df.fillna(0, inplace=True)
@@ -115,12 +159,15 @@ def main_senate(excel, sessions, trials):
         df.loc[(num, "mean"), :] = average
         df.loc[(num, "std_dev"), :] = standard_dev
 
-    # Create an Excel Writer to write to an Excel spreadsheet
-    writer = pd.ExcelWriter(excel)
-    df.to_excel(writer,'Senate')
-    writer.save()
+    return df
         
 if __name__ == "__main__":
 
-    main_house(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
-    main_senate(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
+    writer = pd.ExcelWriter(sys.argv[1])
+    
+    main_house(int(sys.argv[2]), int(sys.argv[3])).to_excel(writer,'House')
+    
+    main_senate(int(sys.argv[2]), int(sys.argv[3])).to_excel(writer,'Senate')
+
+    writer.save()
+    

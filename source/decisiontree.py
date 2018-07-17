@@ -11,7 +11,7 @@ def decisiontree(df):
   '''
   Takes DataFrame of members of Congress and their votes
   '''
-  df = df.copy()
+
   # Create a list of features excluding party_code
   features_cols = list(df.columns)
   features_cols.remove("party_code")
@@ -23,7 +23,7 @@ def decisiontree(df):
   averages = []
 
   # Sample upto 30 (inclusive) Congressmen
-  for x in range(1, 31):
+  for x in range(1, 20):
     # Create a training dataset (list) with the first x congressmen
     training_features = df.iloc[:x][features_cols]
 
