@@ -161,11 +161,13 @@ def main_senate(sessions, trials):
         
 if __name__ == "__main__":
 
-    writer = pd.ExcelWriter(sys.argv[1])
+    writer = pd.ExcelWriter(sys.argv[1] + ".xlsx")
     
-    main_house(int(sys.argv[2]), int(sys.argv[3])).to_excel(writer,'House')
-    
-    main_senate(int(sys.argv[2]), int(sys.argv[3])).to_excel(writer,'Senate')
-
+    house_df = main_house(int(sys.argv[2]), int(sys.argv[3]))
+    house_df.to_csv(sys.argv[1] + "_house.csv")
+    house_df.to_excel(writer,'House')
+    senate_df = main_senate(int(sys.argv[2]), int(sys.argv[3]))
+    senate_df.to_csv(sys.argv[1] + "_senate.csv")
+    senate_df.to_excel(writer,'Senate')
     writer.save()
     
