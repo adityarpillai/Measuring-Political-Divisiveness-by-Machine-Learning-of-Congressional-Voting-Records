@@ -1,4 +1,4 @@
-import decisiontree
+import neuralnetwork
 from scripts.features import get_features
 import sys
 import pandas as pd
@@ -27,7 +27,7 @@ def main_house(sessions, trials):
     ...     ...         ...             ...         ...
 
     where person_001, person_002, person_n is the training size used and the
-    variable measured is the successrate of the DecisionTree model.
+    variable measured is the successrate of the Neural Network model.
 
     """
     # Create a DataFrame that is first sorted by session, then by trial
@@ -51,8 +51,8 @@ def main_house(sessions, trials):
         # Run a trial for trials number of times 
         for trial in range(1, trials + 1):
             print("\tOn trial #" + str(trial))
-            # Run the decisiontree
-            arr = decisiontree.decisiontree(membervotes_df.copy())
+            # Run the neural net
+            arr = neuralnetwork.neuralnetwork(membervotes_df.copy())
 
             # Cycle through the array and add the score
             for x in range(len(arr)):
@@ -103,7 +103,7 @@ def main_senate(sessions, trials):
     ...     ...         ...             ...         ...
 
     where person_001, person_002, person_n is the training size used and the
-    variable measured is the successrate of the DecisionTree model.
+    variable measured is the successrate of the Neural network model.
 
     """
     
@@ -130,8 +130,8 @@ def main_senate(sessions, trials):
         for trial in range(1, trials + 1):
             print("\tOn trial #" + str(trial))
             
-            # Run the decisiontree
-            arr = decisiontree.decisiontree(membervotes_df.copy())
+            # Run the neural net
+            arr = neuralnetwork.neuralnetwork(membervotes_df.copy())
 
             # Cycle through the array and add the score
             for x in range(len(arr)):
