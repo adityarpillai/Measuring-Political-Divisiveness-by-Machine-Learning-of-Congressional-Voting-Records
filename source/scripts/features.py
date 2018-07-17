@@ -83,7 +83,8 @@ def get_features(votes_file, party_file):
             # Add the party code to the df
             df.at[icpsr, "party_code"] = party_code
         
-        # Now add the current vote's cast code to that congressperson's vote_n
+        # Now add the current vote's cast code to that congressperson's 
+        # vote_<rollnumber>
         df.at[icpsr, "vote_" + str(vote["rollnumber"])] = vote["cast_code"]
         
     # Return the df
