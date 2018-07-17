@@ -7,11 +7,11 @@ from sklearn import tree
 # To get a features DataFrame from the CSV files
 from scripts.features import get_features
 
-def decisiontree(votes, members):
-  # Get a DataFrame of features
-  df = get_features(votes, members)
-  df = df.fillna(0)
-
+def decisiontree(df):
+  '''
+  Takes DataFrame of members of Congress and their votes
+  '''
+  df = df.copy()
   # Create a list of features excluding party_code
   features_cols = list(df.columns)
   features_cols.remove("party_code")
@@ -48,5 +48,8 @@ if __name__ == "__main__":
       print("\nERROR: No filename specified, or too many command line variables.")
       print("RUN AS: decisiontree.py [votes filename] [members filename]\n")
       exit(0)
-  print(decisiontree(sys.argv[1], sys.argv[2]))
+      # Get a DataFrame of features
+  df = get_features(sys.argv[1], sys.argv[2])
+  df = df.fillna(0)
+  print(decisiontree(df))
   
