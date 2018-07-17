@@ -41,11 +41,10 @@ def main_house(sessions, trials):
         num = "{:03}".format(x)
 
         # Create link for votes file
-        votes_f = BASE_FILE_LOCATION + "data/house/H" + num + "_votes.csv"
-        # Create link for members file
-        members_f = BASE_FILE_LOCATION + "data/house/H" + num + "_members.csv"
+        dataframe_f = BASE_FILE_LOCATION + "compiled_data/senate/S" + num + "_dataframe.csv"
 
-        membervotes_df = get_features(votes_f, members_f)
+        membervotes_df = pd.read_csv(dataframe_f)
+
         membervotes_df.fillna(0, inplace=True)
 
         # Run a trial for trials number of times 
@@ -119,11 +118,10 @@ def main_senate(sessions, trials):
         num = "{:03}".format(x)
 
         # Create link for votes file
-        votes_f = BASE_FILE_LOCATION + "data/senate/S" + num + "_votes.csv"
-        # Create link for members file
-        members_f = BASE_FILE_LOCATION + "data/senate/S" + num + "_members.csv"
+        dataframe_f = BASE_FILE_LOCATION + "compiled_data/senate/S" + num + "_dataframe.csv"
 
-        membervotes_df = get_features(votes_f, members_f)
+        membervotes_df = pd.read_csv(dataframe_f)
+
         membervotes_df.fillna(0, inplace=True)
 
         # Run a trial for trials number of times 
