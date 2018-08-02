@@ -1,38 +1,45 @@
 # Necessary to read file from running this as a script
-import sys, csv
-
-# Creates a dictionary of empty lists for each of the members of congress
-from collections import defaultdict
+import sys
 
 # Sklearn's decision tree implementation
 from sklearn import tree
 
-import numpy as np
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
-
-# Diagnosis of issues
-from pprint import pprint
-
+# To get a features DataFrame from the CSV files
 from scripts.features import get_features
-from scripts.shuffle import unison_shuffle
 
-def main(votes, members):
+def decisiontree(df):
+  '''
+  Takes DataFrame of members of Congress and their votes
+  '''
 
-  (parties, features) = get_features(votes, members)
+  # Create a list of features excluding party_code
+  features_cols = list(df.columns)
+  features_cols.remove("party_code")
 
-  parties = np.array(parties)
-  features = np.array(features)
+  # Shuffle the DataFrame
+  df = df.sample(frac=1)
 
-  parties, features = unison_shuffle(parties, features)
-  
+  # Create an empty list of scores for the classifier
   averages = []
 
-  for x in range(1, 31):
+  # Sample upto 30 (inclusive) Congressmen
+  for x in range(1, 20):
+    # Create a training dataset (list) with the first x congressmen
+    training_features = df.iloc[:x][features_cols]
+
+    # Create the classifiers
+    training_classifiers = df.iloc[:x]["party_code"]
+
+    # Create a Decision Tree classifier with 
     clf = tree.DecisionTreeClassifier()
-    clf = clf.fit(features[:x], parties[:x])
-    averages.append(clf.score(features, parties))
+    clf = clf.fit(training_features, training_classifiers)
+
+    # Define test values
+    test_features = df[:][features_cols]
+    test_classifiers = df[:]["party_code"]
+
+    # Run score and append it to averages
+    averages.append(clf.score(test_features, test_classifiers))
 
   return averages 
    
@@ -41,5 +48,8 @@ if __name__ == "__main__":
       print("\nERROR: No filename specified, or too many command line variables.")
       print("RUN AS: decisiontree.py [votes filename] [members filename]\n")
       exit(0)
-  print(main(sys.argv[1], sys.argv[2]))
+      # Get a DataFrame of features
+  df = get_features(sys.argv[1], sys.argv[2])
+  df = df.fillna(0)
+  print(decisiontree(df))
   

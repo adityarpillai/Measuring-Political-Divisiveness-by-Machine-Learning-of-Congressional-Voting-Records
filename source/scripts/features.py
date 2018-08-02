@@ -1,60 +1,109 @@
-import sys, csv
+# sys is only needed when running from file directly, so it can read argv
+import sys
+
+# importing pandas to use dataframe
+import pandas as pd
+
+# possibly not needed
 from collections import defaultdict
-from pprint import pprint
-
-# Takes in both votes and information about members of Congress to create both a list for classifications and a list of features for each member of Congress
-
-# sys.argv[1] = votes csv file
-# sys.argv[2] = members csv file
 
 def get_features(votes_file, party_file):
+    """ 
+        Takes in VoteView's votes and party files for any given chamber and
+        returns a Pandas Dataframe of data of congressmen, party code, and 
+        votes.
+
+        |  icpsr  |  party_code  |  Vote 1  |  ...  |  Vote N  |
+        |  12345  |    Code 1    |    9     |  ...  |     0    |
+
+        icpsr is the identification for members of Congress, and party_code is
+        the identification for parties of Congress.
+
+        Documentation for the data in the CSV files are available at VoteView's 
+        CSV documentation.
+
+        https://voteview.com/static/docs/csv_docs.html
+    """
+
+    '''
+        Open both files so errors appear before time-intensive calculations are
+        made.
+
+        The votes_df DataFrame follows the following (example) format:
+           congress chamber  rollnumber  icpsr  cast_code   prob
+        0         1   House           1    154          6   61.1
+        1         1   House           1    259          9   99.6
+        2         1   House           1    379          1  100.0
+        3         1   House           1    649          1   59.2
+        4         1   House           1    786          1   97.7
+
+        The party_df DataFrame follows the following (yet another example
+        format:
+           congress    chamber  icpsr  ...  party_code  ...  
+        0         1  President  99869  ...        5000  ...
+        1         1      House   4766  ...        5000  ...
+        3         1      House   8457  ...        5000
+        4         1      House   9062  ...        5000  ...
+    '''
+    votes_df = pd.read_csv(votes_file)
+    party_df = pd.read_csv(party_file)
+
+    # Search through the party_df DataFrame by the icpsr so that we can quickly
+    # get access to party codes later
+    party_df = party_df.set_index("icpsr")
+
+    '''
+        Create a new DataFrame that follows this format:
+        |  icpsr  |  party_code  |  vote_1  |  ...  |  vote_n  |
+        |  12345  |    Code 1    |    9     |  ...  |     0    |
+
+        This DataFrame can be searched by icpsr.
+    '''
+    # Create only icpsr and party_code columns, as vote_1 ... vote_n will be
+    # added later. Also, set_index to be icpsr.
+    df = pd.DataFrame(columns=["icpsr", "party_code"])
+    df = df.set_index("icpsr")
+
+    # Cycle through every vote and add it to a new DataFrame
+    for vote in votes_df.iterrows():
+
+        # Get second value from the tuple of (index, data)
+        vote = vote[1]
+
+        # Temporarily store icpsr
+        icpsr = vote["icpsr"]
+        
+        # Check if icpsr already exists in the indices of the df
+        if not (icpsr in df.index):
+            # Create it since it doesn't already exist
+            
+            # Find the party code in the party_df DataFrame
+            party_code = party_df.loc[icpsr]["party_code"]
+
+            # Add the party code to the df
+            df.at[icpsr, "party_code"] = party_code
+        
+        # Now add the current vote's cast code to that congressperson's 
+        # vote_<rollnumber>
+        df.at[icpsr, "vote_" + str(vote["rollnumber"])] = vote["cast_code"]
+        
+    # Return the df
+    return df
     
-
-    # Open the votes file
-    with open(votes_file, 'r') as f:
-        reader = csv.reader(f)
-        data = list(reader)
-
-    total_rollcalls = int(data[len(data) - 1][2])
-    # print([0] * total_rollcalls)
-    congresspeoples = defaultdict(lambda: [0] * total_rollcalls)
-
-    # Create a dictionary where the key is the icpsr of the congressperson and the pair is the list of their votes
-    for vote in data[1:]:
-        # Unused
-        session = vote[0]
-        chamber = vote[1]
-        probability = vote[5]
-
-        # Used
-        rollnumber = int(vote[2]) # An identifier for what was voted on
-        icpsr = vote[3] # An identiier for the person that was voting
-        cast_code = int(vote[4]) # How they voted
-        (congresspeoples[icpsr])[rollnumber - 1] = cast_code
-
-    # Open the party file and save it to the party_information list
-    with open(party_file, 'r') as f:
-        reader = csv.reader(f)
-        party_information = list(reader)
-
-    # Create a dictionary of party members to their party codes
-    party_dict = dict()
-    for person in party_information:
-        party_dict[person[2]] = person[6]
+    # Create a list of icpsr's excluding 
     
-    features = []
-    votes = []
-
-    # Add each member of Congress to two lists (one for their classification and one for their features)
-    for member in congresspeoples:
-        features.append(party_dict[member])
-        votes.append(congresspeoples[member])
-
-    return(features, votes)
+    # for person in party_df:
 
 if __name__ == "__main__":
+    """
+        If features.py is called directly, it will output the results of 
+        get_features with the votes file and members file being the first and
+        second argument vectors, respectively.
+    """
+
+    # Ensure that there are two 
     if(len(sys.argv) != 3):
-        print("\npython features.py [votes csv] [members csv]\n")
+        print("Usage: python features.py <votes.csv> <members.csv>\n")
         exit(-1)
     
-    get_features(sys.argv[1], sys.argv[2])
+    print(get_features(sys.argv[1], sys.argv[2]))
